@@ -7,12 +7,12 @@ from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 def register(request):
     if request.method == 'POST':
-        form = CustomUserRegisterForm(request.POST, request.LILES)
+        form = CustomUserRegisterForm(request.POST, request.FILES)
         if form.is_valid():
             try:
                 user = form.save(commit=False)
                 if 'email' in form.changed_data:
-                    user.username = form.changed_data['email']
+                    user.username = form.cleaned_data['email']
                 if 'image' in request.FILES:
                     image = request.FILES['image']
                     user.image_small = save_custom_image(image,size=(300,300), folder='small')
@@ -33,12 +33,12 @@ def register(request):
 def user_login(request):
     if request.method == 'POST':
         form = CustomUserLoginForm(data=request.POST)
-        if form.is_valid():
-            user = authenticate(request, username=form.cleaned_data['email'],
-                                password=form.cleaned_data['password'])
-            if user is not None:
-                login(request, user)
-                return redirect('homepage')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('homepage')
     else:
         form = CustomUserLoginForm()
     return render(request, 'login.html', {'form': form})
