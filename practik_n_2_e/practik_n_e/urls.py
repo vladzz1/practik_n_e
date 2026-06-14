@@ -29,5 +29,4 @@ urlpatterns = [
     path('', views.homepage, name='homepage')
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.IMAGES_URL, document_root=settings.IMAGES_ROOT)
+urlpatterns += static(settings.IMAGES_URL, document_root=settings.IMAGES_ROOT)

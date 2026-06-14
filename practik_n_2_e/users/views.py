@@ -39,6 +39,8 @@ def user_login(request):
         if user is not None:
             login(request, user)
             return redirect('homepage')
+        else:
+            form.add_error(None, "Логін або пароль вказано невірно")
     else:
         form = CustomUserLoginForm()
     return render(request, 'login.html', {'form': form})

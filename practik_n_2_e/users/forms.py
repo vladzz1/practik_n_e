@@ -66,7 +66,7 @@ class CustomUserRegisterForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ('email', 'first_name', 'last_name', 'image',)
+        fields = ('email', 'first_name', 'last_name', 'image', "password1", "password2",)
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -83,7 +83,7 @@ class CustomUserRegisterForm(UserCreationForm):
         return password2
     
 class CustomUserLoginForm(AuthenticationForm):
-    email = forms.EmailField(
+    username = forms.EmailField(
         label='Електронна пошта',
         required=True,
         widget=forms.TextInput(attrs={

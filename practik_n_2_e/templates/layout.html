@@ -37,9 +37,11 @@
         </div>
 
         {% if user.is_authenticated %}
-            <img src="/images/{{ user.image_small }}" alt="Аватар" class="user-avatar">
-
-            <a href="{% url 'users:logout' %}" class="border border-indigo-500 hover:bg-indigo-500/10 text-indigo-400 hover:text-indigo-300 px-5 py-2 rounded-lg text-sm font-medium transition-colors">Вихід</a>
+            <div class="flex items-center gap-2">
+                <img src="/images/small/{{ request.user.image_small }}" alt="Аватар" class="user-avatar">
+    
+                <a href="{% url 'users:logout' %}" class="border border-indigo-500 hover:bg-indigo-500/10 text-indigo-400 hover:text-indigo-300 px-5 py-2 rounded-lg text-sm font-medium transition-colors">Вихід</a>
+            </div>
         {% else %}
             <!-- CTA кнопки -->
             <div class="flex items-center gap-2">
