@@ -1,5 +1,4 @@
 import os
-from django.conf import settings
 from django.shortcuts import get_object_or_404, render, redirect
 from products.forms import ProductForm
 from products.models import Product, ProductImage
@@ -89,3 +88,5 @@ def product_delete(request, product_id):
             messages.error(request, f'Помилка при видаленні продукту: {str(x)}')
             
     return redirect('products:show_products')
+
+# def product_details(request, product_id):

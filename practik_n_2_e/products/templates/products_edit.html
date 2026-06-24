@@ -60,6 +60,9 @@
                        multiple 
                        accept="image/*"
                        class="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-sm text-gray-400 file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 focus:outline-none">
+                <div id="preview-container"
+                    class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                </div>
                 <p class="mt-1 text-xs text-gray-500">Перше обране фото автоматично стане головним.</p>
             </div>
 
@@ -71,6 +74,108 @@
         </form>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+
+<script>
+const fileInput = document.getElementById('id_images');
+const previewContainer = document.getElementById('preview-container');
+
+let selectedFiles = [];
+
+fileInput.addEventListener('change', function () {
+
+    // додаємо нові файли
+    [...this.files].forEach(file => {
+        selectedFiles.push(file);
+    });
+
+    renderPreview();
+});
+
+function renderPreview() {
+
+    previewContainer.innerHTML = '';
+
+    selectedFiles.forEach((file, index) => {
+
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+
+            const item = document.createElement('div');
+
+            item.className =
+                "relative rounded-xl overflow-hidden bg-gray-700 cursor-move";
+
+            item.dataset.index = index;
+
+            item.innerHTML = `
+                <img src="${e.target.result}"
+                     class="w-full h-40 object-cover">
+
+                <button type="button"
+                        class="remove-btn absolute top-2 right-2 bg-red-600 hover:bg-red-500 text-white rounded-full w-8 h-8"
+                        data-index="${index}">
+                    ✕
+                </button>
+
+                ${index === 0
+                    ? '<div class="absolute bottom-0 left-0 right-0 bg-indigo-600 text-white text-center py-1 text-sm">Головне фото</div>'
+                    : ''}
+            `;
+
+            previewContainer.appendChild(item);
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
+</script>
+
+<script>
+new Sortable(previewContainer, {
+    animation: 150,
+
+    onEnd: function (evt) {
+
+        const movedItem = selectedFiles.splice(evt.oldIndex, 1)[0];
+
+        selectedFiles.splice(evt.newIndex, 0, movedItem);
+
+        renderPreview();
+    }
+});
+</script>
+
+<script>
+previewContainer.addEventListener('click', function (e) {
+
+    if (!e.target.classList.contains('remove-btn'))
+        return;
+
+    const index = Number(e.target.dataset.index);
+
+    selectedFiles.splice(index, 1);
+
+    renderPreview();
+});
+</script>
+
+<script>
+const form = document.querySelector('form');
+
+form.addEventListener('submit', function () {
+
+    const dt = new DataTransfer();
+
+    selectedFiles.forEach(file => {
+        dt.items.add(file);
+    });
+
+    fileInput.files = dt.files;
+});
+</script>
 
 <script>
   function slugify(text) {
