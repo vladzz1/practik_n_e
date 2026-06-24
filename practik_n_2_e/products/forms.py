@@ -1,11 +1,12 @@
 from django import forms
 from .models import Product
+from categories.models import Category
 
 class ProductForm(forms.ModelForm):
-    category = forms.CharField(
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
         label='Назва категорії',
-        max_length=100,
-        widget=forms.TextInput(attrs={
+        widget=forms.Select(attrs={
             'class': 'w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-3 text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none',
             'placeholder': 'Назва категорії ...',
         })
@@ -13,7 +14,7 @@ class ProductForm(forms.ModelForm):
 
     name = forms.CharField(
         label='Назва продукту',
-        max_length=100,
+        max_length=255,
         widget=forms.TextInput(attrs={
             'class': 'w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-3 text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none',
             'placeholder': 'Назва продукту ...',
@@ -25,7 +26,7 @@ class ProductForm(forms.ModelForm):
         required=False,
         widget=forms.TextInput(attrs={
             'class': 'w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-3 text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none',
-            'placeholder': 'category-name',
+            'placeholder': 'product-name',
         })
     )
 
@@ -39,43 +40,23 @@ class ProductForm(forms.ModelForm):
         })
     )
 
-    price = forms.CharField(
+    price = forms.DecimalField(
         label='Ціна',
         required=False,
-        widget=forms.TextInput(attrs={
+        widget=forms.NumberInput(attrs={
             'class': 'w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-3 text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none',
             'rows': '3',
             'placeholder': 'Ціна ...',
         })
     )
 
-    # created_at = forms.CharField(
-    #     label='Створено в',
-    #     required=False,
-    #     widget=forms.TextInput(attrs={
-    #         'class': 'w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-3 text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none',
-    #         'rows': '3',
-    #         'placeholder': 'Створено в ...',
-    #     })
-    # )
-
-    # updated_at = forms.CharField(
-    #     label='Оновлено в',
-    #     required=False,
-    #     widget=forms.TextInput(attrs={
-    #         'class': 'w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-3 text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none',
-    #         'rows': '3',
-    #         'placeholder': 'Оновлено в ...',
-    #     })
-    # )
-
     class Meta:
         model = Product
-        fields = ('category', 'name', 'slug', 'description', 'price', 'created_at', 'updated_at')
+        fields = ('category', 'name', 'slug', 'description', 'price')
 
     def clean_name(self):
         name = self.cleaned_data.get('name')
-        gs = Product.objects.filter(name=name)
+        gs = Product.objects.filter(name__iexact=name)
         if self.instance.pk:
             gs = gs.exclude(pk=self.instance.pk)
         if gs.exists():

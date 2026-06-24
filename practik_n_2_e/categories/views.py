@@ -87,7 +87,7 @@ def category_delete(request, category_id):
                     file_path.unlink()
             
             category.delete()
-            messages.success(request, 'Категорію та її зображення успішно видалено')
+            messages.success(request, 'Категорію успішно видалено')
             
         except Exception as x:
             messages.error(request, f'Помилка при видаленні категорії: {str(x)}')
