@@ -58,7 +58,7 @@ class Command(BaseCommand):
                 'products': {
                     'Помідори': {
                         'slug': 'pomidory',
-                        'description': 'Сочні червоні помідори, вирощені в теплиці',
+                        'description': 'Соковиті червоні помідори, вирощені в теплиці',
                         'price': 45.00,
                         'images': [
                             'https://images.silpo.ua/v2/products/1000x1000/webp/68622333-6dd6-40c4-8f30-5b97340dc168.png',
@@ -89,7 +89,7 @@ class Command(BaseCommand):
                 }
             },
             'Фрукти': {
-                'description': 'Сочні спілі фрукти прямо з саду',
+                'description': 'Соковиті спілі фрукти прямо з саду',
                 'slug': 'fruits',
                 'image_url': 'https://images.silpo.ua/v2/categories/200x200/webp/_pos--right_/aa8c41de-6ffd-4b7c-9e86-999a2d249dfa.png',
                 'products': {
@@ -115,7 +115,7 @@ class Command(BaseCommand):
                     },
                     'Апельсини': {
                         'slug': 'apelsyny',
-                        'description': 'Солодкі сочні апельсини, багаті на C вітамін',
+                        'description': 'Солодкі соковиті апельсини, багаті на C вітамін',
                         'price': 55.00,
                         'images': [
                             'https://images.silpo.ua/v2/products/1000x1000/webp/7774efde-6f1a-4ea6-821f-1ecb3b4d34fb.png',

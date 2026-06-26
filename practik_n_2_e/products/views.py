@@ -89,4 +89,6 @@ def product_delete(request, product_id):
             
     return redirect('products:show_products')
 
-# def product_details(request, product_id):
+def product_details(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    return render(request, "products_details.html", {"product": product})
