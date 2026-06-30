@@ -5,8 +5,10 @@
 
 <div class="min-h-screen bg-gray-900 py-10 px-4">
     <div style="display: flex;">
-        <img src="">
-        <div>
+        <button id="prev-btn" class="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors" style="margin: 122px 20px;"><</button>
+        <img id="main-product-image" src="{{ product.images.first.image.url }}" alt="{{ product.name }}" width="300px" height="100px">
+        <button id="next-btn" class="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors" style="margin: 122px 20px;">></button>
+        <div style="margin-left: 30%;">
             <div style="font-size: 30px; color: white;">Назва: {{ product.name }}</div>
             <div style="font-size: 30px; color: white;">Опис: {{ product.description }}</div>
             <div style="font-size: 30px; color: white;">Ціна: {{ product.price }}</div>
@@ -14,6 +16,71 @@
             <div style="font-size: 30px; color: white;">Оновлено: {{ product.updated_at }}</div>
         </div>
     </div>
+    <div class="flex gap-2 overflow-x-auto py-2" style="margin: 20px;">
+        {% for img in product.images.all %}
+            <button class="thumbnail-btn w-20 h-20 rounded-lg overflow-hidden border-2 transition-all bg-gray-950 flex items-center justify-center flex-shrink-0" data-index="{{ forloop.counter0 }}">
+                <img src="{{ img.image.url }}" alt="preview" class="w-full h-full object-cover">
+            </button>
+        {% endfor %}
+    </div>
 </div>
 
+<script id="django-images-data" type="application/json">
+    [
+        {% for img in product.images.all %}
+            "{{ img.image.url }}"{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ]
+</script>
+
+<script>
+    const images = JSON.parse(document.getElementById('django-images-data').textContent);
+
+    let currentIndex = 0;
+    const mainImage = document.getElementById('main-product-image');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    
+    const thumbnails = document.querySelectorAll('.thumbnail-btn');
+
+    function updateImage(index) {
+        if (images.length === 0) return;
+        
+        mainImage.src = images[index];
+        currentIndex = index;
+
+        thumbnails.forEach((thumb, i) => {
+            if (i === index) {
+                thumb.classList.remove('border-transparent', 'border-gray-700');
+                thumb.classList.add('border-indigo-500', 'ring-2', 'ring-indigo-500/50');
+            } 
+            else {
+                thumb.classList.remove('border-indigo-500', 'ring-2', 'ring-indigo-500/50');
+                thumb.classList.add('border-gray-700');
+            }
+        });
+    }
+
+    prevBtn.addEventListener('click', () => {
+        if (images.length <= 1) return;
+        let index = (currentIndex === 0) ? images.length - 1 : currentIndex - 1;
+        updateImage(index);
+    });
+
+    nextBtn.addEventListener('click', () => {
+        if (images.length <= 1) return;
+        let index = (currentIndex === images.length - 1) ? 0 : currentIndex + 1;
+        updateImage(index);
+    });
+
+    thumbnails.forEach(thumb => {
+        thumb.addEventListener('click', () => {
+            // Отримуємо індекс з атрибута data-index
+            const index = parseInt(thumb.getAttribute('data-index'));
+            updateImage(index);
+        });
+    });
+
+    updateImage(0);
+</script>
 {% endblock %}
