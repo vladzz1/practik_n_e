@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router"
 import { Link } from "react-router"
 import * as z from "zod"
 import { useForm } from "react-hook-form"
@@ -12,6 +13,7 @@ import type { IUserRegistration } from "../types/users/IUserRegistration.ts"
 function RegistrationPage() {
     const [loading, ] = useState(false)
     const [registration] = useRegistrationUserMutation()
+    const navigate = useNavigate()
 
     const formSchema = z.object({
         username: z.string().min(1, { message: "Нікнейм обов'язковий" }).max(50, { message: "Нікнейм занадто довгий" }),
@@ -56,6 +58,7 @@ function RegistrationPage() {
             formData.append('image', data.image)
             const response = await registration(formData as unknown as IUserRegistration).unwrap()
             console.log(response)
+            navigate('/')
         }
         catch (error) {
             console.error(error)

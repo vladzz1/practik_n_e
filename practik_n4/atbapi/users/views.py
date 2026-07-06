@@ -56,15 +56,18 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
             user = user.first()
             if not user:
                 return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
-            refresh = RefreshToken.for_user(user)  
-            return Response({
-                "message": "Ок",
-                "username": user.username,
-                "tokens": {
-                    "refresh": str(refresh),
-                    "access": str(refresh.access_token),
-                }
-            },  status=status.HTTP_200_OK)
+            if user.check_password(password):
+                refresh = RefreshToken.for_user(user)  
+                return Response({
+                    "message": "Ок",
+                    "username": user.username,
+                    "tokens": {
+                        "refresh": str(refresh),
+                        "access": str(refresh.access_token),
+                    }
+                },  status=status.HTTP_200_OK)
+            else:
+                return Response({"detail" : "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
