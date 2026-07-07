@@ -50,9 +50,9 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     def login(self, request):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
-            username = serializer.validated_data['username']
+            email = serializer.validated_data['email']
             password = serializer.validated_data['password']
-            user = CustomUser.objects.filter(username=username)
+            user = CustomUser.objects.filter(email=email)
             user = user.first()
             if not user:
                 return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)

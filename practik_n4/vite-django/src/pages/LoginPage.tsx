@@ -14,14 +14,14 @@ const LoginPage = () => {
     const navigate = useNavigate()
 
     const formSchema = z.object({
-        username: z.email({ message: "Введіть коректну електронну пошту" }),
+        email: z.email({ message: "Введіть коректну електронну пошту" }),
         password: z.string().min(6, { message: "Пароль повинен містити щонайменше 6 символів" }).max(100, { message: "Пароль занадто довгий" })
     })
 
     const form = useForm<z.infer<typeof formSchema>>({
        resolver: zodResolver(formSchema),
        defaultValues: {
-           username: "",
+           email: "",
            password: ""
        }
     })
@@ -91,7 +91,7 @@ const LoginPage = () => {
 
                         <FormInput
                             control={form.control}
-                            name="username"
+                            name="email"
                             label="Електронна пошта"
                             placeholder="kozak@sich.ua"
                         />
