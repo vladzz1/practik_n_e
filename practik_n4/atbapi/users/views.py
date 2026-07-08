@@ -7,6 +7,7 @@ import random
 from .utils import save_custom_image
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 FIRST_NAMES = ["Alice", "Bob", "Charlie", "Diana", "Eve", "Frank"]
 LAST_NAMES = ["Smith", "Johnson", "Brown", "Taylor", "Anderson", "Lee"]
@@ -39,6 +40,18 @@ def generate_random_users(n=5):
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
+
+    def get_permissions(self):
+        if self.action in ['login', 'registration']:
+            permission_classes = [AllowAny]
+        elif self.action in ['list', 'retrieve']:
+            # тільки авторизовані користувачі можуть бачити список/деталі
+            permission_classes = [IsAuthenticated]
+            # або, якщо хочете взагалі заборонити GET списку всім:
+            # permission_classes = [IsAdminUser]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
     @action(detail=False, methods=['post'])
     def generate(self, request):

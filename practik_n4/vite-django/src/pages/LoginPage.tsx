@@ -7,11 +7,14 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { FormInput } from "../components/FormInput/FormInput.tsx"
 import { useLoginUserMutation } from "../services/usersApi.ts"
 import { PasswordFormInput } from "../components/FormInput/PasswordFormInput.tsx"
+import { useAppDispatch } from "../store"
+import { setCredentials } from "../store/authSlice.ts"
 
 const LoginPage = () => {
     const [loading, ] = useState(false)
     const [login] = useLoginUserMutation()
     const navigate = useNavigate()
+    const dispatch = useAppDispatch()
 
     const formSchema = z.object({
         email: z.email({ message: "Введіть коректну електронну пошту" }),
@@ -29,6 +32,11 @@ const LoginPage = () => {
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
             const response = await login(data).unwrap()
+            dispatch(setCredentials({
+                access: response.tokens.access,
+                refresh: response.tokens.refresh,
+                username: response.username
+            }))
             console.log(response)
             navigate('/')
         }
@@ -53,23 +61,6 @@ const LoginPage = () => {
 
             {/* Card */}
             <div className="relative w-full max-w-[400px]">
-
-                 {/*Logo mark */}
-                <div className="flex justify-center mb-8">
-                    <Link to="/" className="flex items-center gap-2.5 group select-none">
-                        <div className="w-10 h-10 rounded-2xl
-                            bg-gradient-to-br from-indigo-500 to-violet-600
-                            flex items-center justify-center
-                            shadow-lg shadow-indigo-500/30
-                            group-hover:scale-105 transition-transform duration-200"
-                        >
-                            <span className="text-white font-bold text-base">К</span>
-                        </div>
-                        <span className="font-semibold text-slate-800 dark:text-slate-100 text-lg tracking-tight">
-                            КозакиApp
-                        </span>
-                    </Link>
-                </div>
 
                 {/* Form card */}
                 <div className="bg-white dark:bg-slate-900

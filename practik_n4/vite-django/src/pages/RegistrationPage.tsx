@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { useNavigate } from "react-router"
-import { Link } from "react-router"
 import * as z from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -81,23 +80,6 @@ function RegistrationPage() {
         
                     {/* Card */}
                     <div className="relative w-full max-w-[400px]">
-        
-                         {/*Logo mark */}
-                        <div className="flex justify-center mb-8">
-                            <Link to="/" className="flex items-center gap-2.5 group select-none">
-                                <div className="w-10 h-10 rounded-2xl
-                                    bg-gradient-to-br from-indigo-500 to-violet-600
-                                    flex items-center justify-center
-                                    shadow-lg shadow-indigo-500/30
-                                    group-hover:scale-105 transition-transform duration-200"
-                                >
-                                    <span className="text-white font-bold text-base">К</span>
-                                </div>
-                                <span className="font-semibold text-slate-800 dark:text-slate-100 text-lg tracking-tight">
-                                    КозакиApp
-                                </span>
-                            </Link>
-                        </div>
         
                         {/* Form card */}
                         <div className="bg-white dark:bg-slate-900
