@@ -70,10 +70,12 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
             if not user:
                 return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
             if user.check_password(password):
-                refresh = RefreshToken.for_user(user)  
+                refresh = RefreshToken.for_user(user)
+                strimage= str(user.image_small)
                 return Response({
                     "message": "Ок",
                     "username": user.username,
+                    'image': strimage,
                     "tokens": {
                         "refresh": str(refresh),
                         "access": str(refresh.access_token),
@@ -107,11 +109,13 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
                 user.image_medium = save_custom_image(uploaded_image, size=(800, 800), folder='medium')
                 user.image_large = save_custom_image(uploaded_image, size=(1200, 1200), folder='large')
 
-            refresh = RefreshToken.for_user(user)            
+            refresh = RefreshToken.for_user(user)
+            strimage= str(user.image_small)
             user.save()
             return Response({
                 "message": "Користувача успішно створено",
                 "username": user.username,
+                'image': strimage,
                 "tokens": {
                     "refresh": str(refresh),
                     "access": str(refresh.access_token),

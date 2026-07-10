@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react"
 import { Outlet, Link, useLocation } from "react-router"
-import { useAppDispatch } from "../../store"
+import { useAppDispatch, useAppSelector } from "../../store"
 import { logout } from "../../store/authSlice"
+import APP_ENV from "../../env"
 
 const NAV_LINKS = [
     { label: "Головна", to: "/" },
@@ -40,8 +41,10 @@ const DefaultLayout = () => {
         return false
     })
 
-    const [isAuth, setIsAuth] = useState(false)
     const dispatch = useAppDispatch()
+
+    const {username, image} = useAppSelector(x=>x.auth);
+    console.log("username", username, image);
 
     const location = useLocation()
 
@@ -54,13 +57,6 @@ const DefaultLayout = () => {
         else {
             root.classList.remove("dark")
             localStorage.setItem("theme", "light")
-        }
-        const accessToken = localStorage.getItem("accessToken")
-        if (accessToken == null) {
-            setIsAuth(false)
-        }
-        else {
-            setIsAuth(true)
         }
     }, [dark])
 
@@ -129,7 +125,7 @@ const DefaultLayout = () => {
                             </button>
 
                             {/* CTA */}
-                            {!isAuth ? (
+                            {!username ? (
                                 <>
                                     <Link className="hidden md:flex items-center gap-2
                                         px-4 py-2 rounded-xl text-sm font-medium
@@ -154,16 +150,13 @@ const DefaultLayout = () => {
                                 </>
                             ) : (
                                 <>
-                                    <img alt="Аватар" className="user-avatar"/>
+                                    <img  src = {`${APP_ENV.API_URL}/images/small/${image}`} alt="Аватар" className="user-avatar"/>
                                     <button className="hidden md:flex items-center gap-2
                                         px-4 py-2 rounded-xl text-sm font-medium
                                         bg-gradient-to-r from-indigo-500 to-violet-600
                                         text-white shadow-md shadow-indigo-500/30
                                         hover:shadow-indigo-500/50 hover:scale-[1.02]
-                                        transition-all duration-200" onClick={() => {
-                                            dispatch(logout())
-                                            setIsAuth(false)
-                                        }}>
+                                        transition-all duration-200" onClick={() => {dispatch(logout())}}>
                                         Вийти
                                     </button>
                                 </>

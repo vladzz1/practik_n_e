@@ -8,11 +8,14 @@ import { PasswordFormInput } from "../components/FormInput/PasswordFormInput.tsx
 import { ImageFormInput } from "../components/FormInput/ImageFormInput.tsx"
 import { useRegistrationUserMutation } from "../services/usersApi.ts"
 import type { IUserRegistration } from "../types/users/IUserRegistration.ts"
+import { useAppDispatch } from "../store"
+import { setCredentials } from "../store/authSlice.ts"
 
 function RegistrationPage() {
     const [loading, ] = useState(false)
     const [registration] = useRegistrationUserMutation()
     const navigate = useNavigate()
+    const dispatch = useAppDispatch()
 
     const formSchema = z.object({
         username: z.string().min(1, { message: "Нікнейм обов'язковий" }).max(50, { message: "Нікнейм занадто довгий" }),
@@ -56,7 +59,13 @@ function RegistrationPage() {
             formData.append("confirm_password", data.confirm_password)
             formData.append('image', data.image)
             const response = await registration(formData as unknown as IUserRegistration).unwrap()
-            console.log(response)
+
+            dispatch(setCredentials({
+                access: response.tokens.access,
+                refresh: response.tokens.refresh,
+                username: response.username,
+                image: response.image
+            }))
             navigate('/')
         }
         catch (error) {

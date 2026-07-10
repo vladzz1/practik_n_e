@@ -35,9 +35,9 @@ const LoginPage = () => {
             dispatch(setCredentials({
                 access: response.tokens.access,
                 refresh: response.tokens.refresh,
-                username: response.username
+                username: response.username,
+                image: response.image
             }))
-            console.log(response)
             navigate('/')
         }
         catch (error) {
