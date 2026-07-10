@@ -10,8 +10,8 @@ interface AuthState {
 const initialState: AuthState = {
     accessToken: localStorage.getItem('accessToken'),
     refreshToken: localStorage.getItem('refreshToken'),
-    username: localStorage.getItem('username'),
-};
+    username: localStorage.getItem('username')
+}
 
 const authSlice = createSlice({
     name: 'auth',
@@ -38,8 +38,8 @@ const authSlice = createSlice({
             localStorage.removeItem('accessToken')
             localStorage.removeItem('refreshToken')
             localStorage.removeItem('username')
-        },
-    },
+        }
+    }
 })
 
 export const { setCredentials, logout } = authSlice.actions
